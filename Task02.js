@@ -1,42 +1,39 @@
-// Selecting DOM Elements using modern methods [cite: 14]
 const arrow = document.querySelector("#arrow");
 const target = document.querySelector("#target");
 const scoreDisplay = document.querySelector("#scoreVal");
 const timeDisplay = document.querySelector("#timeVal");
 const messageBox = document.querySelector("#message");
 const restartBtn = document.querySelector("#restartBtn");
+const resetBtnTop = document.querySelector("#resetBtnTop");
 
-// Game State Variables [cite: 36, 38]
 let score = 0;
-let timeLeft = 30;
+let timeLeft = 90;
 let isGameOver = false;
 let isArrowFlying = false;
 let targetY = 100;
 let targetSpeed = 5;
 let targetDirection = 1;
 
-// Intervals
 let targetInterval;
 let timerInterval;
+let arrowInterval;
 
-// Initialize Game
 function init() {
     startTimer();
     moveTarget();
-    // Event listener for shooting [cite: 14]
     document.addEventListener("click", handleShoot);
     restartBtn.addEventListener("click", resetGame);
+    resetBtnTop.addEventListener("click", resetGame);
 }
 
-// Function to move the archery target [cite: 24]
 function moveTarget() {
+    clearInterval(targetInterval);
     targetInterval = setInterval(() => {
         if (isGameOver) return;
 
         targetY += targetSpeed * targetDirection;
 
-        // Bounce logic [cite: 4]
-        if (targetY <= 0 || targetY >= (window.innerHeight * 0.85) - 60) {
+        if (targetY <= 0 || targetY >= (window.innerHeight * 0.85) - 80) {
             targetDirection *= -1;
         }
 
@@ -44,8 +41,8 @@ function moveTarget() {
     }, 20);
 }
 
-// Function to handle the countdown [cite: 25, 45]
 function startTimer() {
+    clearInterval(timerInterval);
     timerInterval = setInterval(() => {
         timeLeft--;
         timeDisplay.textContent = timeLeft;
@@ -53,31 +50,28 @@ function startTimer() {
     }, 1000);
 }
 
-// Function to shoot the arrow [cite: 3, 60]
 function handleShoot(e) {
-    if (isGameOver || isArrowFlying || e.target.id === 'restartBtn') return;
+    if (isGameOver || isArrowFlying || e.target.tagName === 'BUTTON') return;
 
     isArrowFlying = true;
     arrow.style.display = "block";
 
-    // Position arrow relative to bow
     const bow = document.querySelector("#bow");
-    arrow.style.top = (bow.offsetTop + 25) + "px";
+    arrow.style.top = (bow.offsetTop + 30) + "px";
     let arrowX = 80;
 
-    let arrowInterval = setInterval(() => {
-        arrowX += 15;
+    clearInterval(arrowInterval);
+    arrowInterval = setInterval(() => {
+        arrowX += 18;
         arrow.style.left = arrowX + "px";
 
-        // Collision Detection [cite: 6, 63]
         if (checkCollision()) {
             updateScore();
-            resetArrow(arrowInterval);
+            resetArrow();
         }
 
-        // Arrow out of screen [cite: 60]
         if (arrowX > window.innerWidth) {
-            resetArrow(arrowInterval);
+            resetArrow();
         }
     }, 20);
 }
@@ -89,26 +83,19 @@ function checkCollision() {
     return !(a.right < t.left || a.left > t.right || a.bottom < t.top || a.top > t.bottom);
 }
 
-// Increases score when target is hit [cite: 26, 51]
 function updateScore() {
     score++;
     scoreDisplay.textContent = score;
-    increaseDifficulty();
+    targetSpeed += 0.4;
 }
 
-// Makes the game harder [cite: 28, 53]
-function increaseDifficulty() {
-    targetSpeed += 0.5;
-}
-
-function resetArrow(interval) {
-    clearInterval(interval);
+function resetArrow() {
+    clearInterval(arrowInterval);
     isArrowFlying = false;
     arrow.style.display = "none";
     arrow.style.left = "80px";
 }
 
-// Logic for when time reaches zero [cite: 46, 48]
 function endGame() {
     isGameOver = true;
     clearInterval(targetInterval);
@@ -118,16 +105,24 @@ function endGame() {
 }
 
 function resetGame() {
+    clearInterval(targetInterval);
+    clearInterval(timerInterval);
+    clearInterval(arrowInterval);
+
     score = 0;
-    timeLeft = 30;
+    timeLeft = 90;
     isGameOver = false;
+    isArrowFlying = false;
     targetSpeed = 5;
+    targetY = 100;
+
     scoreDisplay.textContent = "0";
-    timeDisplay.textContent = "60";
+    timeDisplay.textContent = "90";
     messageBox.style.display = "none";
+    arrow.style.display = "none";
+
     moveTarget();
     startTimer();
 }
 
-// Start the game logic [cite: 6]
 init();
