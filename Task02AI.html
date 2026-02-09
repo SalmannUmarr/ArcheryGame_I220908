@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archery Legend: Pro Edition</title>
+  <link rel="stylesheet" href="Task02AI.css">
+</head>
+<body>
+<div id="ui-layer">
+  <div class="stat-box">
+    <span class="label">SCORE</span>
+    <span id="scoreVal" class="value">0</span>
+  </div>
+  <div class="stat-box">
+    <span class="label">TIME</span>
+    <span id="timeVal" class="value">90</span>
+  </div>
+  <div class="stat-box">
+    <span class="label">BEST</span>
+    <span id="highScore" class="value">0</span>
+  </div>
+  <button id="resetBtnTop">RESTART</button>
+</div>
+
+<div id="gameArea">
+  <div id="weather-effect"></div>
+  <div id="bow">🏹</div>
+  <div id="arrow"></div>
+  <div id="target">
+    <div class="inner-bullseye"></div>
+  </div>
+
+  <div id="message">
+    <div class="modal-content">
+      <h1 id="msgText">GAME OVER</h1>
+      <p>Total Points: <span id="finalScore">0</span></p>
+      <p id="newRecord" class="hidden">NEW RECORD!</p>
+      <button id="restartBtn">PLAY AGAIN</button>
+    </div>
+  </div>
+</div>
+
+<script src="Task02AI.js"></script>
+</body>
+</html>
